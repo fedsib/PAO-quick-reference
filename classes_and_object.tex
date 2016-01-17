@@ -1,0 +1,70 @@
+\chapter{Classi e Oggetti}
+
+Le \textit{struct} al contrario delle classi, permettono di usare la rappresentazione interna dell'ADT.
+
+\section{Modularizzazione}
+Classi:
+\begin{itemize}
+\item Definizione di Interfaccia.h, il file di header con tutte le dichiarazioni dell'ADT (campi dato e metodi)
+\item Implementazione dei suoi metodi nel file .cpp
+\item in un terzo file, ci va il main
+\end{itemize}
+
+Istruzioni per modularizzazione:
+\begin{itemize}
+	\item \textit{g++ -c orario.cpp} compila orario.cpp
+	\item \textit{g++ -c main.cpp} compila il main
+	\item \textit{g++ main.o orario.o} linka i binari 
+\end{itemize}
+
+L'information hiding è garantito dal fatto che all'utente verrà consegnato solo il compilato orario.o 
+
+\section{Costruttori e Assegnazione}
+
+\subsection{Costruttore standard}
+Il costruttore standard è reso disponibile dal linguaggio, ed è un costruttore di default (senza parametri)
+
+\textbf{Comportamento:} Alloca la memoria e lascia i valori dei tipi primitivi e derivati (puntatori, riferimenti e array) indefiniti. Per i tipi classe richiama il costruttore di default dell'oggetto, campo dato per campo dato.
+
+\textbf{Esempio:} Per costruire un Dataora (oggetto composto da due sotto oggetti, una data e un orario), il costruttore standard di Dataora invocherà il costruttore di default di data e il costruttore di default di orario, standard oppure ridefiniti. 
+
+\textbf{NOTA:} Nel costruttore di default, gli oggetti di altre classi possono essere costruiti richiamando il loro costruttore di default, come avviene a pag. 50 del libro dove il costruttore di default della classe telefonata, costruisce di default due oggetti di tipo orario:
+\textit{telefonata::telefonata(text)\{numero = 0;\}}
+
+\subsection{Costruttore di copia}
+Il costruttore di copia ha firma orario(const orario\&)\{\}, è riconoscibile in quattro casi:
+\begin{itemize}
+	\item orario pippo = o; dove o è un oggetto di tipo orario precedentemente creato con l'istruzione orario o; In questo primo caso abbiamo una nuova variabile che viene dichiarata, seguita da un assegnazione. La combinazione tipo, nomevariabile, assegnazione, indica che si tratta in realtà di un costruttore di copia
+	\item orario pippo(mezzanotte); se si dichiara una nuova variabile di tipo e gli si passa un altro oggetto dello stesso tipo, non è un costruttore ad un parametro, bensì un costruttore di copia.
+	\item Nel caso di passaggio di parametri per valori in funzioni
+	\item Nel caso di ritorno per valore in funzioni
+\end{itemize} 
+
+\textbf{Comportamento:} Copia campo per campo.
+
+\textbf{Per approfondire:} \url{http://www.tutorialspoint.com/cplusplus/cpp_copy_constructor.htm}
+
+\subsection{Assegnazione}
+L'assegnazione è data dal simbolo = che è un operatore ridefinibile con firma \textit{C\& operator=(const C\&)}. 
+
+\textbf{Comportamento:} L'assegnazione standard tra due oggetti, assegna i valori membro a membro, invocando l'assegnazione standard o ridefinita del tipo.
+E' pericoloso in quanto può generare interferenze e condivisione non voluta di memoria se l'assegnazione tra campi riguarda puntatori.
+
+\subsection{Costruttore ad un parametro}
+Il costruttore con un solo parametro agisce anche come convertitore di tipo (ciò può essere bloccato usando la keyword \textit{explicit}) 
+
+\textbf{Esempio:} il costruttore \textit{orario(int)\{\}} genera una conversione implicita dal tipo int al tipo orario (ma non il viceversa).
+
+Sarebbe come ridefinire \textit{operator int()} dichiarandolo nella parte pubblica della classe orario, generando una conversione esplicita.
+
+\subsection{Ridefinizione di operatori}
+Un operatore può essere ridefinito come metodo interno alla classe o come funzione esterna.
+Come metodo, ha sempre un parametro in meno rispetto a quelli richiesti, ad esempio un operatore binario come operator+, avrà un solo parametro tra parentesi, mentre
+un operatore unario non avrà parametri.Questo vale solo per gli operatori ridefiniti come metodi propri della classe, se invece fossero ridefiniti come funzioni esterne, allora avrebbero un parametro in più di tipo classe (quello che era l'oggetto di invocazione, viene passato per parametro).
+
+Un operatore è ridefinibile solo se tra i parametri ha almeno un tipo definito dall'utente.
+Ridefinendo un operatore come funzione esterna, non si necessita dell'operatore di scoping nella definizione del metodo nel file .cpp ma l'operatore perderà l'accesso alla parte privata della classe.
+
+\textbf{NOTA:} gli operatori [] e () possono essere ridefiniti solo come metodi propri.
+
+\url{https://stackoverflow.com/questions/4172722/what-is-the-rule-of-three}(The Rule of Three - StackOverflow)

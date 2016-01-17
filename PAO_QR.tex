@@ -1,0 +1,162 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[english,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{amssymb,amsmath}
+\usepackage{appendix}
+
+\hypersetup{%
+    pdfborder = {0 0 0}
+}
+\usepackage{graphicx}
+\usepackage[svgnames]{xcolor} % Required to specify font color
+\usepackage{eurosym}
+
+
+\titleformat{\chapter}[hang] 
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter.}{1em}{} 
+
+\titlespacing*{\chapter}{0pt}{5pt}{40pt}
+
+\newcommand*{\plogo}{\fbox{$\mathcal{PL}$}} % Generic publisher logo
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{fancyhdr}
+
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage{listingsutf8}
+\setlength{\voffset}{-0.5in}
+\setlength{\topmargin}{-0.2in}
+\setlength{\textheight}{240mm}
+\setlength{\textwidth}{142mm}
+\setlength{\evensidemargin}{0.3in}
+\setlength{\oddsidemargin}{0.3in}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+  \bfseries
+  \huge UNIVERSITÀ DEGLI STUDI DI PADOVA
+  \vskip-.1in
+  \rule{\textwidth}{1.5pt}
+  \vskip.1in
+  \textsc{\LARGE Scuola di Scienze}
+  \vskip.2in
+  \includegraphics[scale=.2]{images/logo-unipd}
+  \vskip.25in
+  \large CORSO DI LAUREA IN INFORMATICA
+  \vskip.7in
+  \Large PAO\vskip.1in 
+  \vskip.1in
+  \Large QUICK REFERENCE
+  \vskip.7in
+  \emph{\huge Riassunto Programmazione ad Oggetti}
+\end{center}
+
+\vskip1in
+\hskip.2\textwidth
+\begin{minipage}{.75\textwidth}
+  \begin{flushleft}
+    \bfseries\large \par \emph{Federico Silvio Busetto Matricola:1026925}
+  \end{flushleft}
+\end{minipage}
+
+\vskip0.9in
+\centering
+\bfseries
+\Large ANNO ACCADEMICO 2014-2015
+\end{titlepage}
+
+\pagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+\listoffigures
+\clearpage
+
+
+%----------------------------------------------------------------------------------------
+%	CONSTANTS
+%----------------------------------------------------------------------------------------
+
+\newcommand{\authorName}{Federico Silvio Busetto}
+
+%----------------------------------------------------------------------------------------
+%	HEADER FORMAT
+%----------------------------------------------------------------------------------------
+
+\fancyhf{}
+\fancyhead[RE]{\small\scshape\nouppercase{\leftmark}}
+%\fancyhead[LO]{\small\scshape\nouppercase{\rightmark}}
+\fancyhead[LE,RO]{\small\thepage}
+%\lhead{\rightmark}
+\rhead{\leftmark}
+
+\fancypagestyle{plain}{\fancyfoot[RO,LE]{\thepage}}
+
+\rfoot{\thepage}
+
+\fancyfoot[RO, LE]{\thepage}
+\pagestyle{fancy}
+
+\setlength{\parindent}{0pt}
+
+%----------------------------------------------------------------------------------------
+%	CODE FORMAT
+%----------------------------------------------------------------------------------------
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ 
+backgroundcolor=\color{white},
+basicstyle=\footnotesize,
+breakatwhitespace=true,
+breaklines=true,
+captionpos=b, 
+commentstyle=\color{mygreen},
+extendedchars=\true,
+inputencoding=utf8/latin1,
+frame=single,	 
+keepspaces=true,   
+keywordstyle=\color{blue}, 
+numbers=left,    
+numbersep=5pt,
+numberstyle=\tiny\color{mygray},
+rulecolor=\color{black},
+showspaces=false, 
+showstringspaces=false, 
+showtabs=false,
+stepnumber=4,
+stringstyle=\color{mymauve},
+tabsize=4,
+title=\lstname 
+}
+
+%----------------------------------------------------------------------------------------
+%	CONTENT
+%----------------------------------------------------------------------------------------
+
+\include{Introduction}
+\include{classes_and_object} %capitoli 2 e 3
+\include{template} %capitolo 4
+\include{STL_containers} %capitolo 5
+\include{inheritance} %capitolo 6, 7 e 8
+\include{Qt} %capitolo 9
+\include{Project}
+\include{Extra} 
+
+
+%\appendix
+
+%\input{glossario}
+\end{document}
