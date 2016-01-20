@@ -31,6 +31,8 @@ Il costruttore standard è reso disponibile dal linguaggio, ed è un costruttore
 \textbf{NOTA:} Nel costruttore di default, gli oggetti di altre classi possono essere costruiti richiamando il loro costruttore di default, come avviene a pag. 50 del libro dove il costruttore di default della classe telefonata, costruisce di default due oggetti di tipo orario:
 \textit{telefonata::telefonata(text)\{numero = 0;\}}
 
+\textbf{$NOTA_{2}$:} Nel caso di oggetti composti da altri oggetti, omettere nella lista d'inizializzazione del costruttore il costruttore di copia del campo dato di tipo oggetto, farà invocare il costruttore di default di quell'oggetto.
+
 \subsection{Costruttore di copia}
 Il costruttore di copia ha firma orario(const orario\&)\{\}, è riconoscibile in quattro casi:
 \begin{itemize}
@@ -68,3 +70,152 @@ Ridefinendo un operatore come funzione esterna, non si necessita dell'operatore 
 \textbf{NOTA:} gli operatori [] e () possono essere ridefiniti solo come metodi propri.
 
 \url{https://stackoverflow.com/questions/4172722/what-is-the-rule-of-three}(The Rule of Three - StackOverflow)
+
+\newpage
+\chapter{Classi Collezione e Argomenti correlati}
+
+\section{Il problema dell'interferenza}
+
+L'interferenza è un problema che consiste in condivisione non voluta della memoria. E'spesso causata da puntatori gestiti in modo improprio.
+
+Mettiamo di avere due campi dato puntatore ad un tipo. \textit{int * p,q;}
+L'assegnazione standard \textit{p = q;} copia i campi puntatore, cioè assegna al puntatore di sinistra p l'R-valore del puntatore di destra q.
+L'R-valore di q in realtà è un indirizzo di memoria, e quindi ora p punta all'area di memoria, precedentemente puntata da q.
+
+Quindi il problema nasce perché l'assegnazione standard copia i campi puntatore, ma non gli oggetti ai quali essi puntano, generando aliasing (p e q possono essere usati 
+indistintamente). Oltre all'assegnazione, questo capita anche con i costruttori di copia.
+
+Bisogna prestare particolare attenzione a due aspetti:
+\begin{itemize}
+	\item Condivisione di memoria
+	\item Funzioni che modificano oggetti
+\end{itemize}
+
+Il problema può essere risolto, ridefinendo la triade della memoria, ovvero il costruttore di copia, l'assegnazione e il distruttore.
+
+\subsection{Assegnazione Profonda}
+Per ridefinire l'assegnazione occorre ridefinire operator=, la cui firma è \textit{C\& operator=(const C\&);} 
+
+\textit{operator=} ritorna un tipo per riferimento (questo permette di fare assegnazioni a cascata) e prende come secondo paramentro un oggetto di tipo compatibile, passato per riferimento costante (si evita una copia inutile).
+
+\textit{operator=} va sempre inserito come metodo pubblico della classe da ridefinire, spesso occorrono anche due metodi statici di supporto definiti esternamente ad operator= (per esempio nelle liste): 
+
+\begin{itemize}
+	\item \textit{static nodo* copia(nodo*);}
+	\item \textit{static void distruggi(nodo*);}
+\end{itemize}
+
+A questo punto all'interno di \textit{operator=} Dovremmo:
+
+\begin{itemize}
+	\item usare \textit{operator!=} in modo da assicurarci di non stare assegnando lo stesso oggetto a se stesso, operazione inutile.
+	\item liberare la memoria dall'oggetto puntato dal puntatore di sinistra
+	\item fare la copia profonda dell'oggetto e spostare il puntatore
+	\item ritornare l'oggetto di invocazione tramite \textit{*this} 
+\end{itemize}
+
+Riportiamo qui, ad esempio \textit{operator=} di bolletta
+
+\lstinputlisting[language=C++]{src/distruttore.cpp}
+
+\subsection{Costruttore di Copia}
+Basta invocare la funzione di copia, passandoci come parametro il puntatore, nella lista d'inizializzazione del costruttore. Il corpo sarà quindi vuoto.
+
+\subsection{Distruttore}
+Il comportamento standard di un distruttore è l'opposto di quello di un costruttore, un distruttore in una funzione distrugge prima:
+
+\begin{itemize}
+	\item le variabili locali di f
+	\item il temporaneo anonimo ritornato da f
+	\item i parametri di f passati per valore
+\end{itemize}
+
+Seguendo esattamente l'ordine contrario rispetto a quello di costruzione degli oggetti.
+
+Una funzione alloca i parametri da destra a sinistra (ecco perché i parametri con valore di default vanno indicati il più a destra possibile, saranno i primi ad essere costruiti), il distruttore dealloca da sinistra a destra (seguendo l'ordine di lettura).
+
+\textbf{Esempio:}
+\textit{void f(A $a_{1}, A a_{2}, ..., A a_{n}$)} alloca $a_{n}, ..., a_{2}, a_{1}$ e distrugge $a_{1}, A a_{2}, ..., A a_{n}$
+
+\textbf{Comportamento:} 
+\begin{itemize}
+	\item Viene eseguito il corpo del distruttore
+	\item Vengono invocati gli opportuni distruttori (standard o ridefiniti), nell'ordine inverso a quello di costruzione
+\end{itemize}
+
+\textbf{Ridefinizione:} Va ridefinito sempre e soltanto all'interno della classe la sua firma, per la classe C è $\sim C()$
+
+\textbf{NOTA:} Il distruttore, può essere dichiarato virtuale, per rendere una classe virtuale polimorfa
+
+\section{Cast}
+Si rimanda al libro di testo, l'argomento è piuttosto immediato.
+
+\subsubsection{Overloading operatori}
+
+\begin{itemize}
+	\item \textit{Operatore di standard output}: L'overloading dell'operatore di output (\textit{operator<<}) conviene sia sempre fatto come funzione esterna alla classe, anziché come metodo pubblico. Questo però, impedisce l'accesso ai campi e ai metodi definiti nella parte privata della classe. Devono essere usati solo metodi pubblici della classe, come metodi getter (i metodi che restituiscono il valore di un campo dati). Oppure va definita come funzione amica della classe. 
+	L'operatore di output ritorna un'oggetto di tipo ostream per riferimento (in modo da poter usare << a cascata) e prende uno o due parametri conforme se è definito come metodo pubblico all'interno della classe, oppure come funzione esterna. Come metodo pubblico avrà un solo parametro di tipo ostream\&, come funzione esterna avrà anche un parametro oggetto della classe, passato per riferimento costante. Per essere usato deve includere \textit{iostream} e usare le opportune direttive d'uso.
+	\item \textit{Operatore di indicizzazione}: L'overloading dell'operatore di indicizzazione (\textit{operator[]}) è spesso usato all'interno di contenitori, in modo da usare la classe contenitore come usualmente si usa un'array. La sua firma è \textit{T\& operator[](iteratore it) const} E' un metodo costante, e ritorna puntatori costanti a T. E' necessaria una dichiarazione di amicizia tra iteratore e contenitore, affinché contenitore possa accedere al campo puntatore. 
+	\item \textit{Operatore di delete:} Ha firma \textit{void operator delete(void *)} Non ha oggetto di invocazione, e non ritorna nulla. Quello standard (invocabile tramite l'operatore di scoping ::delete) si limita ad invocare i distruttori opportuni, solitamente è ridefinito per ottenere una condivisione controllata della memoria.
+\end{itemize} 
+
+\section{Overloading degli operatori e Dichiarazioni d'amicizia} 
+
+\subsubsection{Dichiarazioni d'amicizia}
+
+Tramite la keyword \textit{friend} è possibile definire relazioni di amicizia, esponendo la parte privata di una classe, alla funzione o alla classe dichiarata come amica.
+
+L'uso dell'amicizia avviene in due tappe fondamentali:
+\begin{itemize}
+	\item La dichiarazione d'amicizia, posta sempre dentro la classe (qui genericamente indicata con T), anche se la dichiarazione è dentro la classe, la funzione è sempre esterna 
+	\item La definizione della funzione, all'interno del file .cpp, va preceduta dalla keyword friend
+\end{itemize}
+
+Esempio di dichiarazione: \textit{friend ostream\& operator<<(ostream\& o, const T\&);}\\
+
+\textbf{Le dichiarazioni d'amicizia vanno usate solo se strettamente necessario, e qualora vi sia un'alternativa vanno sempre evitate}
+
+\section{Classi contenitore e iteratori}
+
+I contenitori standard definiti dal linguaggio verranno trattati più avanti.
+
+\subsection{Iteratori}
+Un iteratore generalizza il concetto di puntatore. E' un'oggetto, che punta ad un altro oggetto. Solitamente è una classe pubblica contenuta dentro una classe contenitore.
+
+\textbf{$NOTA_{1}$:} Va sempre preceduta da una dichiarazione d'amicizia, nella parte privata della classe contenitore. La dichiarazione d'amicizia garantisce a tutti i membri di iteratore, l'accesso alla parte privata di contenitore, che sarebbe altrimenti inaccessibile. Al contrario dei metodi, le classi annidate non hanno accesso ai membri delle altre classi più esterne.
+
+\textbf{$NOTA_{2}$:} Anche la classe contenitore deve essere una classe amica della sottoclasse iteratore perché altrimenti non potrebbe avere accesso ai campi privati di iteratore (soprattutto al campo puntatore). La classe contenitore necessita di accedere alla parte privata di iteratore per definire i suoi metodi pubblici.
+
+\textbf{$NOTA_{3}$:} La classe iteratore va dichiarata prima della dichiarazione dei metodi che usano iteratori.
+
+\textbf{$NOTA_{4}$:} Nella classe iteratore non vanno ridefiniti assegnazione, costruttori di copia e distruttori. 
+
+L'iteratore è una funzionalità fornita dalla classe contenitore, che fornirà anche dei metodi pubblici per definire iteratori iniziali e finali (oltre a ridefinire l'operatore di indicizzazione come detto sopra).
+
+Riassumendo: 
+\begin{itemize}
+	\item contenitore contiene una classe pubblica iteratore e la dichiara come sua amica
+	\item iteratore dichiara come sua amica la classe contenitore
+	\item iteratore offre gli operatori di confronto e gli operatori di incremento e decremento prefisso e postfisso.
+	\item contenitore ridefinisce usando l'amicizia l'operatore di indicizzazione [] come metodo pubblico
+	\item contenitore offre anche una ridefinizione dei metodi costanti \textit{begin()}, che ritorna l'iteratore al primo elemento di contenitore e \textit{end()} che ritorna l'iteratore alla posizione successiva a quella finale del contenitore.
+\end{itemize}
+
+\section{Condivisione controllata della memoria}
+Tenendo per riferimento la classe bolletta, per ottenere una condivisione controllata della memoria occorre:
+\begin{itemize}
+	\item Aggiungere dentro la classe nodo (classe privata, interna a bolletta) un campo contatore per contare i riferimenti a nodo.
+	\item Ridefinire l'operatore di delete di nodo, in modo che se il campo contatore è uguale a zero si invochi la delete standard di nodo, altrimenti si scali semplicemente di uno questo campo.
+	\begin{itemize}
+		\item se il puntatore non è nullo, cioè c'è qualcosa da deallocare
+		\item casto esplicitamente il puntatore da void* a nodo*
+		\item scalo uno dal contatore dei riferimenti
+		\item a questo punto, se il contatore vale zero
+		\item invoco la delete sul nodo successivo della lista
+		\item invoco la delete standard sulla lista
+	\end{itemize}	
+\end{itemize}
+La ridefinizione di delete di bolletta, è la seguente:
+\lstinputlisting[language=C++]{src/delete.cpp}
+
+\subsection{Puntatori smart}
