@@ -219,3 +219,27 @@ La ridefinizione di delete di bolletta, è la seguente:
 \lstinputlisting[language=C++]{src/delete.cpp}
 
 \subsection{Puntatori smart}
+I puntatori smart nascono per automatizzare la gestione del campo riferimenti. Basterebbe ridefinire la triade della memoria per puntatori a nodo ma non è possibile (i puntatori sono tipi derivati e non oggetti di una classe definita dal programmatore). Di seguito sono elencate le peculiarità di Smartp.
+
+\begin{itemize}
+	\item La classe Smartp ha un solo campo dati di tipo Nodo*.
+	\item \`{E} preceduta da una dichiarazione incompleta della classe Nodo.
+	\item Ridefinisce la triade della memoria (assegnazione, costruttore di copia e distruttore).
+	\item Ridefinisce i due operatori di confronto $ == $ e $ != $
+	\item Ridefinisce l'operatore di dereferenziazione \textasteriskcentered e l'operatore di accesso a membro  $ \rightarrow  $
+\end{itemize}
+
+Cambia anche la classe Nodo.
+
+\begin{itemize}
+	\item Ora è una lista è di Smartp
+	\item Cambia il costruttore a due parametri \textit{Nodo(const telefonata\&, const Smartp\&)}
+	\item Non occorre più ridefinire la delete di Nodo.
+\end{itemize}
+
+\subsubsection{Operatori di Smartp}
+
+\textit{operator\textasteriskcentered} ritorna un riferimento al Nodo puntato dal puntatore inscatolato nello Smartp (in poche parole, swrappa il puntatore). Ritorna \textasteriskcentered punt.\\
+
+\textit{operator$ \rightarrow $} trasforma Smartp in un puntatore a Nodo (Nodo\textasteriskcentered), che viene poi dereferenziato e, con l'operatore di selezione di membro seleziona il campo dati specificato. Ritorna punt.
+
