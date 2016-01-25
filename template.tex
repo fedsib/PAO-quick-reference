@@ -33,7 +33,7 @@ La deduzione dei tipi avviene tramite quattro tipi di conversioni:
 	\item Da valore a riferimento costante (T $ \rightarrow  $const T\&)
 \end{itemize}
 
-Il compilatore controlla i tipi da sinistra a destra.
+Il compilatore controlla i tipi da sinistra a destra.//
 
 \textbf{NOTA:} Il compilatore memorizza le definizioni ma non le compila, genererà il codice macchina solo quando istanzierà i tipi giusti.
 
@@ -46,8 +46,39 @@ Vi sono due modi di compilazione
 
 \section{Template di classe}
 
+I template di classe sono utili per avere varie classi che differiscono per il tipo di campi dato, metodi e classi interne.
 
+Occorre sempre un'istanziazione esplicita e i parametri possono avere valori di default.
+
+La definizione del template è necessaria quando si deve operare su oggetti della classe (l'istanza serve per allocare lo spazio degli oggetti) , mentre non è necessaria per puntatori, riferimenti e dichiarazioni incomplete di classe.
+
+\subsection{Metodi di template di classe}
+
+E' possibile definire i metodi all'esterno della classe usando la sintassi:
+
+\textit{Nome\_classe<Tipo>::Nome\_Metodo()\{\}}
 
 \subsection{Dichiarazioni d'amicizia in template di classe}
+In un template di classe possono apparire tre tipologie di dichiarazioni d'amicizia;
 
-\section{Metodi statici in template}
+\begin{itemize}
+	\item Dichiarazione di una classe (o funzione) friend non template (concreta) dentro ad un template di classe. Diventano amiche di istanze del template mentre le classi che contengono funzioni specifiche, usate nella classe template vanno dichiarate prima della classe templetizzata.
+	\item Dichiarazione di un template di classe (o funzione) friend associato (ha tra i suoi parametri, alcuni dei parametri del template C). Tutte le istanze del template C hanno per amica una e una sola istanza del template associato. \`{E} il caso pi\`{u} comune, usa dichiarazioni incomplete. \textbf va prestata attenzione all'ordine di dichiarazione dei componenti.
+	\item Amicizia con template non associati (gli insiemi dei parametri tr i due template sono disgiunti). Ogni dichiarazione dentro il template C va preceduta da: \textit{template <class Tp>}
+\end{itemize}
+
+\subsubsection{Esempi:}
+Si rimanda agli esempi del libro a pag. 137-144
+
+Un piccolo estratto, 
+
+Per le dichiarazioni di template associati: Ad ogni istanza di \textit{QueueItem} è associata una sola istanza di amica della classe \textit{Queue}//
+
+Per le dichiarazioni di template non associate: Tutte le istanze di \textit{Queue} amiche di ogni istanza di \textit{QueueItem} . Avremmo la classe \textit{Queue<int>} amica di \textit{QueueItem<string>}
+
+\section{Membri statici in template}
+Ogni istanza di T ha propri campi dati e metodi statici. 
+
+\textbf{ATTENZIONE:} Ogni istanza significa, uno comune per ogni tipo.
+
+L'inizializzazione del campo dati statico (istanziato solo se usato), è esterna alla classe, ad es. \texti{template <class T> int Queue<T>::contatore=0;}
