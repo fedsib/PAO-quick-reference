@@ -1,0 +1,53 @@
+\chapter{Template}
+I template sono usati per implementare il polimorfismo parametrico, in modo da rendere disponibile una programmazione generica sui tipi. Essi si dividono in:
+
+\begin{itemize}
+	\item Template di funzione
+	\item Template di classe
+\end{itemize}
+
+\section{Template di funzione}
+Un template di funzione rappresenta la descrizione di un metodo, per generare automaticamente istanze di funzione che differiscono per il tipo degli argomenti.
+
+\lstinputlisting[language=C++,firstline=1,lastline=4]{src/template.cpp}
+
+L'istanziazione implicita avviene invocando normalmente quella esplicita (che converte implicitamente i tipi dei parametri). I tipi della funzione, vengono dedotti dai tipi dei parametri attuali.
+
+La sintassi per dichiarare un template è la seguente:
+
+\textit{template <lista parametri>} ad es. \textit{template <class T, int size>}
+
+I parametri di \textit{lista parametri} possono essere:
+
+\begin{itemize}
+	\item Parametri di tipo: preceduti dalle keyword \textit{class} o \textit{typename}
+	\item Parametri valore: preceduti dal tipo del valore (int, nell'esempio precedente)
+\end{itemize}
+
+La deduzione dei tipi avviene tramite quattro tipi di conversioni:
+
+\begin{itemize}
+	\item Da L a R valore (T\& $ \rightarrow $ T)
+	\item Da array a puntatore (T[] $ \rightarrow $ T\textasteriskcentered )
+	\item Verso il const (T $ \rightarrow $ const T)
+	\item Da valore a riferimento costante (T $ \rightarrow  $const T\&)
+\end{itemize}
+
+Il compilatore controlla i tipi da sinistra a destra.
+
+\textbf{NOTA:} Il compilatore memorizza le definizioni ma non le compila, genererà il codice macchina solo quando istanzierà i tipi giusti.
+
+Vi sono due modi di compilazione
+
+\begin{itemize}
+	\item \textbf{Per inclusione:} Le definizioni dei template sono poste nei file header. Ciò viola il principio dell'\textit{Information Hiding} e genera codice duplicato, rallentando la compilazione; si piò forzare il tipo con una dichiarazione esplicita d'istanziazione  \textit{template int min(int,int)}. Usando la direttiva \textit{g++ -fno-implicit-templates} , verrà generato il codice solo per le istanziazioni esplicite.
+	\item \textbf{Per separazione:} Le dichiarazioni dei template vanno poste in un file header, le definizioni in un altro file. La definizione va preceduta dalla keyword \textit{export}. Questa tipologia di compilazione non è supportata da tutti i compilatori. 
+\end{itemize}
+
+\section{Template di classe}
+
+
+
+\subsection{Dichiarazioni d'amicizia in template di classe}
+
+\section{Metodi statici in template}
