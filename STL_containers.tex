@@ -1,0 +1,35 @@
+\chapter{I contenitori della libreria STL}
+
+Un contenitore, è un template di classe C parametrico sul tipo T degli elementi contenuti (alcuni invece sono parametrici su 2 tipi, come \textit{map} e \textit{multimap}).
+
+Ogni classe contenitore definito nella STL ha tra i suoi membri i seguenti quattro tipi:
+
+\begin{itemize}
+	\item \textit{C::value\_type}: Il tipo T degli oggetti memorizzati nel contenitore deve essere assegnabile ma non deve necessariamente definire un costruttore di default.
+	\item \textit{C::iterator}: Il tipo iteratore, usato per iterare sugli elementi del contenitore fornisce la ridefinizione di \textit{operator\textasteriskcentered} che ritorna un \textit{value\_type\&}
+	\item \textit{C::const\_iterator}: \`{E} l'iteratore usato solo per accedere agli elementi del contenitore. Viene usato anche per accedere ad elementi di contenitori costanti.
+	\item \textit{C::size\_type}: Rappresenta la distanza tra due iteratori.
+\end{itemize}
+
+\subsection{Costruttori, metodi e operatori}
+
+Un contenitore della Standard Template Library offre i seguenti:
+
+\subsubsection{Gestori della memoria}
+\begin{itemize}
+	\item \textit{C(const C\&)}: costruttore di copia ridefinito
+	\item \textit{C\& operator=(const C\&)} ridefinizione dell'operatore di assegnazione
+	\item \textit{$ \tilde{C()} $} distruttore 
+\end{itemize}
+
+\subsubsection{Metodi e operatori}
+\begin{itemize}
+	\item \textit{size\_type size()}: \`{E} un intero maggiore o uguale a zero e rappresenta la dimensione del contenitore, cioè il numero di elementi contenuti.
+	\item \textit{bool empty()}: Equivalente a \textit{c.size() == 0} ritorna vero se il contenitore è vuoto, falso altrimenti.
+	\item \textit{size\_type max\_size()}: Ritorna la massima dimensione che il contenitore c può avere.
+	\item Nelle otto classi contenitore (\textit{vector},\textit{list},\textit{slist},\textit{deque},\textit{set},\textit{map},\textit{multiset},\textit{multimap}) gli elementi sono memorizzati in un'ordine ben definito, quindi vengono offerte anche le ridefinizioni di:
+	\subitem \textit{operator==} e \textit{operator !=}: Ritornano rispettivamente \textit{true} se dati due contenitori b e c, \textit{b.size()==c.size()} se gli elementi contenuti in base al tipo sono uguali e \textit{false} altrimenti (l'inverso per l'altro operatore). Per confrontare i tipi sottostanti, viene invocato \textit{operator==} del tipo contenuto.
+	\subitem \textit{operator<}, \textit{operator <=}, \textit{operator >}, \textit{operator >=}: \textit{operator<} ritorna \textit{true} se la sequenza del primo contenitore è minore a quella del secondo in base all'ordine lessicografico, \textit{false} altrimenti. Gli altri operatori hanno comportamenti simili. 
+\end{itemize}
+
+\section{Iteratori}
