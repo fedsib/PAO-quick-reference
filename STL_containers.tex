@@ -33,3 +33,78 @@ Un contenitore della Standard Template Library offre i seguenti:
 \end{itemize}
 
 \section{Iteratori}
+L'iteratore \textit{Past the end (PTE)} (non dereferenziabile) punta sempre alla posizione successiva all'ultimo elemento del contenitore.
+
+Un iteratore è detto valido se è dereferenziabile, oppure è l'iteratore \textit{PTE}.
+
+La classe contenitore se offre un iteratore, fornisce sempre due metodi pubblici:
+
+\begin{itemize}
+	\item \textit{C::iterator (oppure C::const\_iterator) begin()}: ritorna un iteratore al primo elemento del contenitore c, se c è vuoto ritorna l'iteratore \textit{PTE} 
+	\item \textit{C::iterator (oppure C::const\_iterator) end()}: ritorna sempre l'iteratore \textit{PTE}
+\end{itemize}
+
+\subsection{Metodi e Operatori}
+Oltre a rendere sempre disponibile una ridefinizione di \textit{operator\textasteriskcentered} un iteratore può offrire una ridefinizione degli operatori di incremento (e decremento) prefisso e postfisso:
+
+\begin{itemize}
+	\item \textit{C::iterator\& operator++()}: Incremento prefisso (notare il tipo di ritorno per riferimento), l'iteratore può diventare \textit{PTE} dopo l'incremento
+	\item \textit{C::iterator\& operator--()}: Decremento prefisso, può ritornare un iteratore che punta all'ultimo elemento, se l'operatore è applicato all'iteratore \textit{PTE}
+	\item \textit{C::iterator operator++(int)}: Incremento postfisso (notare il parametro e il tipo di ritorno per valore)
+	\item \textit{C::iterator operator--(int)}: Decremento postfisso (notare il parametro e il tipo di ritorno per valore)
+\end{itemize}
+
+Per \textit{vector} e \textit{deque} sono disponibili iteratori ad accesso casuale (permettono di spostarsi di un numero arbitrario di elementi). Per questi iteratori vengono resi disponibili anche gli operatori di confronto.
+
+Formule utilizzabili per iteratori ad accesso casuale, sia n una variabile intera e it,it1,it2 iteratori ad accesso casuale con $ 0\leq n \leqc.size() $:
+
+\begin{itemize*}
+	\item \textit{it += n} equivalente a n volte ++it se n>0, n volte --it se n<0
+	\item \textit{it + n} uguale a \item \textit{it += n} (col segno meno si effettuano i decrementi)
+	\item \textit{it[n]} equivalente a \textit{\textasteriskcentered(it+n)} ritorna l'oggetto dereferenziando la posizione dell'iteratore dopo l'incremento (o il decremento)
+	\item \textit{it1 < it2} ritorna \textit{true} se it1 punta ad un elemento precedente quello puntato da it2 all'interno del contenitore.
+\end{itemize*}
+
+\section{Sequenze}
+I contenitori sequenza permettono di memorizzare gli elementi in ordine lineare stretto, stabilito dall'utente del contenitore. Sono contenitori sequenza \textit{list}, \textit{slist}, \textit{vector} e \textit{deque}
+
+\subsection{Funzionalità fornite}
+
+\subsubsection{Costruttori}
+
+\begin{itemize}
+	\item \textit{C(C::size\_type n, C::value\_type t)}: Costruttore a due parametri. Costruisce il contenitore c contenente n copie dell'elemento t.
+	\item \textit{C(C::size\_type n)}: Costruttore ad un parametro, costruisce c con n elementi inizializzati al valore di default del template. A patto che il tipo T al quale è istanziato il template renda disponibile il suo costruttore di default.
+\end{itemize}
+
+\subsubsection{Metodi di inserimento}
+
+\begin{itemize}
+	\item \textit{C::iterator insert(C::iterator it, C::value\_type t)}: Inserisce l'elemento t prima dell'elemento puntato da it e torna un iteratore all'elemento inserito
+	\item \textit{void insert(C::iterator it, C::size\_type n, C::value\_type t)}: inserisce n copie di t prima dell'elemento puntato da it.
+\end{itemize}
+
+\subsubsection{Metodi di cancellazione}
+Vengono forniti due metodi di erase:
+
+\begin{itemize}
+	\item \textit{C::iterator erase(C::iterator it)}: Distrugge l'elemento puntato da it e ritorna un iteratore che punta al successivo.
+	\item \textit{C::iterator erase(C::iterator it1,C::iterator it2)}: \`{E} equivalente a rimuovere gli elementi compresi tra [it1,it2) e ritorna un iteratore all'elemento successivo a quello puntato da it2.
+	\item \textit{void clear()}: \`{E} equivalente a \textit{c.erase(c.begin(), c.end()}, in pratica rimuove tutti gli elementi del contenitore.
+\end{itemize}
+
+\subsubsection{Metodi particolari}
+
+Per i contenitori \textit{vector}, \textit{list} e \textit{deque} sono disponibili i metodi
+
+\begin{itemize}
+	\item \textit{void push\_back(C::value\_type t)}: Inserisce l'elemento t in coda al contenitore
+	\item \textit{void pop\_back()}: rimuove l'elemento in coda al contenitore.
+\end{itemize}
+
+Per i contenitori \textit{list} e \textit{deque} sono disponibili i metodi
+
+\begin{itemize}
+	\item \textit{void push\_front(C::value\_type t)}: Inserisce l'elemento t in testa al contenitore
+	\item \textit{void pop\_front()}: rimuove l'elemento in testa al contenitore.
+\end{itemize}
