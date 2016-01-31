@@ -108,3 +108,29 @@ Per i contenitori \textit{list} e \textit{deque} sono disponibili i metodi
 	\item \textit{void push\_front(C::value\_type t)}: Inserisce l'elemento t in testa al contenitore
 	\item \textit{void pop\_front()}: rimuove l'elemento in testa al contenitore.
 \end{description}
+
+\section{Contenitori Associativi}
+I contenitori associativi permoettono un'accesso efficiente agli elementi tramite chiavi ma non è possibile inserire un elemento in una posizione specifica.
+
+\textit{C::key\_type}: \`{E} il tipo della chiave e coincide con \textit{C::value\_type} in \textit{set} e \textit{multiset} dove gli elementi del contenitore sono anche le chiavi d'accesso. In \textit{map} e \textit{multimap} la chiave è una componente dell'elemento e quindi \textit{C::value\_type} non è modificabile. Dato it, un iteratore dereferenziabile, \textit{\textasteriskcenteredit = t;} non compila.
+
+\textit{set} e \textit{map} sono detti \textbf{unici}, non possono esistere due elementi con la stessa chiave.
+\text{multiset} e \textit{multimap} sono detti \textbf{multipli} perché più elementi con la stessa chiave, sono permessi.
+
+\subsection{Funzionalità fornite}
+Ogni contenitore associativo offre le seguenti funzionalità:
+
+\begin{description}
+	\item \textit{C::size\_type count(C::key\_type)}: ritorna il numero di elementi con quella chiave.
+	\item \textit{C::size\_type erase(C::key\_type)}: elimina gli elementi con quella data chiave e ritorna il numero di elementi eliminati.
+	\item \textit{void erase(C::iterator)}: se it è dereferenziabile, distrugge l'elemento puntato da it e lo rimuove dal contenitore.
+	\item \textit{void erase(C::iterator,C::iterator)}: distrugge gli elementi nell'intervallo [it1,it2) e li rimuove dal contenitore.
+	\item \textit{void clear()}: distrugge e rimuove tutti gli elementi del contenitore.
+	\item \textit{C::iterator find(C::key\_type)}: ritorna un iteratore all'elemento con la chiave cercata (se c'è), se non la trova ritorna un iteratore \textit{PTE}, se ci sono più elementi con la stessa chiave ritorna un iteratore ma non si sa a quale elemento.
+\end{description}
+
+I contenitori associativi visti qui, offrono sempre una ridefinizione di \textit{operator<}, in quanto sono contenitori ordinati.
+
+
+
+
