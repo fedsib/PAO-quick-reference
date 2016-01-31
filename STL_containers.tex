@@ -112,7 +112,7 @@ Per i contenitori \textit{list} e \textit{deque} sono disponibili i metodi
 \section{Contenitori Associativi}
 I contenitori associativi permoettono un'accesso efficiente agli elementi tramite chiavi ma non è possibile inserire un elemento in una posizione specifica.
 
-\textit{C::key\_type}: \`{E} il tipo della chiave e coincide con \textit{C::value\_type} in \textit{set} e \textit{multiset} dove gli elementi del contenitore sono anche le chiavi d'accesso. In \textit{map} e \textit{multimap} la chiave è una componente dell'elemento e quindi \textit{C::value\_type} non è modificabile. Dato it, un iteratore dereferenziabile, \textit{\textasteriskcenteredit = t;} non compila.
+\textit{C::key\_type}: \`{E} il tipo della chiave e coincide con \textit{C::value\_type} in \textit{set} e \textit{multiset} dove gli elementi del contenitore sono anche le chiavi d'accesso. In \textit{map} e \textit{multimap} la chiave è una componente dell'elemento e quindi \textit{C::value\_type} non è modificabile. Dato it, un iteratore dereferenziabile, \textit{\textasteriskcentered it = t;} non compila.
 
 \textit{set} e \textit{map} sono detti \textbf{unici}, non possono esistere due elementi con la stessa chiave.
 \text{multiset} e \textit{multimap} sono detti \textbf{multipli} perché più elementi con la stessa chiave, sono permessi.
@@ -130,6 +130,39 @@ Ogni contenitore associativo offre le seguenti funzionalità:
 \end{description}
 
 I contenitori associativi visti qui, offrono sempre una ridefinizione di \textit{operator<}, in quanto sono contenitori ordinati.
+
+\section{Vector}
+Vector è un contenitore sequenza e consiste in un array dinamico ridimensionabile all'occorrenza.
+
+Oltre alle funzionalità viste sopra, offre \textit{vector::size\_type capacity() const}: che ritorna il numero di elementi che v può contenere in totale. 
+\textit{$ v.size() \leq v.capacity() $ è sempre true}
+
+Per usare \textit{vector} occorre
+\begin{enumerate}
+	\item Includere la classe \textit{vector} con l'istruzione \textit{\#include<vector>}
+	\item Usare la direttiva d'uso \textit{using namespace std} o \textit{using std::vector}
+	\item Procedere all'istanziazione del tipo di \textit{vector} in quanto è un template.
+\end{enumerate}
+
+\section{Altri contenitori}
+
+\subsection{list e slist}
+\textit{list} è una lista doppiamente concatenata ed è un contenitore sequenza. \`{E} vantaggiosa per inserimenti e rimozioni ma non per l'accesso agli elementi.\\
+\textit{slist} è una lista singolarmente concatenata.
+
+\begin{description}
+	\item \textit{void merge(list<T>\& )}: Su due liste distinte, rimuove gli elementi della lista passata per parametro e gli inserisce ordinatamente nella prima lista. Necessita di aver ridefinito \textit{operator<} sul tipo T.
+	\item \textit{void reverse()}: Rovescia l'ordine degli elementi della lista.
+	\item \textit{void sort()}: Ordina gli elementi della lista.  Necessita di aver ridefinito \textit{operator<} sul tipo T.
+\end{description}
+
+\subsection{deque}
+\textit{deque} è un contenitore sequenza simile a \textit{vector} con inserimento e rimozione in testa e in coda in tempo costante, mentre nel mezzo in tempo lineare. \`{E} una \textit{double-ended queue} e non rende disponibile il metodo \textit{capacity()}.
+ 
+\subsection{set e multiset}
+
+\textit{set} e \textit{multiset} sono contenitori associativi. 
+\textit{set} richiede la ridefinizione di \textit{operator<} per il tipo al quale verrà istanziato (cioè le chiavi devono essere ordinabili). La chiave coincide con il valore, quindi non sono ammessi valori duplicati.
 
 
 
